@@ -8,6 +8,8 @@ class MyModel(nn.Module):
         self.linear2 = nn.Linear(64, 128)
         self.linear3 = nn.Linear(128, 128)
         self.linear4 = nn.Linear(128, 128)
+        self.linear41 = nn.Linear(128, 128)
+        self.linear42 = nn.Linear(128, 128)
         self.linear5 = nn.Linear(128, 96)
         self.linear6 = nn.Linear(96, 32)
         self.linear7 = nn.Linear(32, 12)
@@ -23,6 +25,8 @@ class MyModel(nn.Module):
         x = self.logsigmoid(self.linear2(x))      # LogSigmoid after second layer
         x = self.relu(self.linear3(x))            # ReLU after third layer
         x = self.relu(self.linear4(x))            # ReLU after fourth layer
+        x = self.linear41(x)
+        x = self.linear42(x)
         x = self.tanh(self.linear5(x))            # Tanh after fifth layer
         x = self.logsigmoid(self.linear6(x))      # LogSigmoid after sixth layer
         x = self.linear7(x)                       # No activation in the last layer
