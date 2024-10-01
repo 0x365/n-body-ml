@@ -32,3 +32,55 @@ class MyModel(nn.Module):
         x = self.linear7(x)                       # No activation in the last layer
         
         return x
+        
+
+class LSTMModel(nn.Module):
+    def __init__(self):
+        super(LSTMModel, self).__init__()
+        
+        # Define the hidden size for the LSTM
+        self.hidden_size = 10
+        
+        # Linear layers
+        self.linear1 = nn.Linear(12, 32)
+        self.linear2 = nn.Linear(32, 64)
+        
+        # LSTM layer
+        self.lstm = nn.LSTM(input_size=64, hidden_size=self.hidden_size, batch_first=True)
+        
+        # Additional linear layers after LSTM
+        self.linear3 = nn.Linear(self.hidden_size, 64)
+        self.linear4 = nn.Linear(64, 12)
+        
+        # Activation functions
+        self.tanh = nn.Tanh()
+        self.logsigmoid = nn.LogSigmoid()
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        # Pass through first linear layer with Tanh activation
+        x = self.tanh(self.linear1(x))
+        
+        # Pass through second linear layer with LogSigmoid activation
+        x = self.logsigmoid(self.linear2(x))
+        
+        # Prepare input for LSTM (batch size should be 1 if input is a single example)
+        x = x.unsqueeze(0)  # Add a batch dimension if needed, e.g., (1, sequence_length, features)
+        
+        # Initialize hidden and cell states for the LSTM (zeros)
+        h_0 = torch.zeros(1, x.size(0), self.hidden_size).to(x.device)  # (num_layers, batch_size, hidden_size)
+        c_0 = torch.zeros(1, x.size(0), self.hidden_size).to(x.device)
+        
+        # Pass through LSTM layer
+        lstm_out, _ = self.lstm(x, (h_0, c_0))
+        
+        # Take the last output of the LSTM (since batch_first=True)
+        lstm_out = lstm_out[:, -1, :]
+        
+        # Pass through third linear layer with ReLU activation
+        x = self.relu(self.linear3(lstm_out))
+        
+        # Pass through fourth linear layer
+        x = self.linear4(x)  # No activation at the final layer
+        
+        return x
