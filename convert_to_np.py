@@ -18,7 +18,7 @@ def csv_input(file_name):
 
 total_num = 5
 
-for i in range(-total_num, total_num):
+for i in tqdm(range(-total_num, total_num)):
     for j in range(-total_num, total_num):
         v1 = 1.5 * i / total_num
         v2 = 1.5 * j / total_num

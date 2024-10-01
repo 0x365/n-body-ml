@@ -15,11 +15,6 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
-// type OutStuff struct {
-//	NumOrbits int
-//	ProcessTime float64
-//}
-
 func get_acceleration(y []float64) (out []float64) {
 
 	out = []float64{}
@@ -105,16 +100,8 @@ func main() {
 
 	bar := progressbar.Default(2 * int64(total_num) * 2 * int64(total_num))
 
-	// v_1 := 0.3471128135672417
-	// v_2 := 0.532726851767674
-
 	var v_1 float64
 	var v_2 float64
-
-	// var k1 []float64
-	// var k2 []float64
-	// var k3 []float64
-	// var k4 []float64
 
 	var x0 []float64
 	var v0 []float64
@@ -183,17 +170,11 @@ func main() {
 				for i = 1; i < 10000; i++ {
 
 					x = arr_a(x, arr_m(v, c1*dt))
-
 					v = arr_a(v, arr_m(get_acceleration(x), dt*d1))
-
 					x = arr_a(x, arr_m(v, c2*dt))
-
 					v = arr_a(v, arr_m(get_acceleration(x), dt*d2))
-
 					x = arr_a(x, arr_m(v, c3*dt))
-
 					v = arr_a(v, arr_m(get_acceleration(x), dt*d3))
-
 					x = arr_a(x, arr_m(v, c4*dt))
 
 					y_string = []string{strconv.Itoa(i)}
@@ -209,7 +190,5 @@ func main() {
 				bar.Add(1)
 			}
 		}
-
 	}
-
 }
