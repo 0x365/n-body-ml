@@ -65,7 +65,7 @@ class LSTMModel(nn.Module):
         x = self.logsigmoid(self.linear2(x))
         
         # Prepare input for LSTM (batch size should be 1 if input is a single example)
-        x = x.unsqueeze(0)  # Add a batch dimension if needed, e.g., (1, sequence_length, features)
+        x = x.unsqueeze(0).contiguous()  # Add a batch dimension if needed, e.g., (1, sequence_length, features)
         
         # Initialize hidden and cell states for the LSTM (zeros)
         h_0 = torch.zeros(1, x.size(0), self.hidden_size).to(x.device)  # (num_layers, batch_size, hidden_size)
