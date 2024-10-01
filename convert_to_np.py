@@ -25,6 +25,7 @@ for i in tqdm(range(-total_num, total_num)):
         try:
             data = csv_input("data/"+str(v1)+"_"+str(v2)+".csv")
             data = np.array(data)
+            print(np.shape(data))
             np.save("data-np/"+str(v1)+"_"+str(v2), data)
             del data
         except:

@@ -4,7 +4,7 @@ from torch import nn
 class MyModel(nn.Module):
     def __init__(self):
         super().__init__()
-        self.linear1 = nn.Linear(13, 64)
+        self.linear1 = nn.Linear(12, 64)
         self.linear2 = nn.Linear(64, 128)
         self.linear3 = nn.Linear(128, 128)
         self.linear4 = nn.Linear(128, 128)
