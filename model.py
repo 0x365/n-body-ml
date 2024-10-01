@@ -45,8 +45,8 @@ class LSTMModel(nn.Module):
         self.linear1 = nn.Linear(12, 32)
         self.linear2 = nn.Linear(32, 64)
         
-        # LSTM layer
-        self.lstm = nn.LSTM(input_size=64, hidden_size=self.hidden_size, batch_first=True)
+        # Double stacked LSTM layer (num_layers=2)
+        self.lstm = nn.LSTM(input_size=64, hidden_size=self.hidden_size, num_layers=2, batch_first=True)
         
         # Additional linear layers after LSTM
         self.linear3 = nn.Linear(self.hidden_size, 64)
@@ -68,8 +68,9 @@ class LSTMModel(nn.Module):
         x = x.unsqueeze(0).contiguous()  # Add a batch dimension if needed, e.g., (1, sequence_length, features)
         
         # Initialize hidden and cell states for the LSTM (zeros)
-        h_0 = torch.zeros(1, x.size(0), self.hidden_size).to(x.device)  # (num_layers, batch_size, hidden_size)
-        c_0 = torch.zeros(1, x.size(0), self.hidden_size).to(x.device)
+        # Adjust for double-stacked LSTM: num_layers=2
+        h_0 = torch.zeros(2, x.size(0), self.hidden_size).to(x.device)  # (num_layers, batch_size, hidden_size)
+        c_0 = torch.zeros(2, x.size(0), self.hidden_size).to(x.device)
         
         # Pass through LSTM layer
         lstm_out, _ = self.lstm(x, (h_0, c_0))
