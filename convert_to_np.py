@@ -6,6 +6,7 @@ import math
 import numpy as np
 
 from tqdm import tqdm
+import itertools
 
 def csv_input(file_name):
     with open(file_name, "r") as f:
@@ -16,17 +17,17 @@ def csv_input(file_name):
     f.close()
     return output
 
-total_num = 5
+total_num = 50
 
-for i in tqdm(range(-total_num, total_num)):
-    for j in range(-total_num, total_num):
-        v1 = 1.5 * i / total_num
-        v2 = 1.5 * j / total_num
-        try:
-            data = csv_input("data/"+str(v1)+"_"+str(v2)+".csv")
-            data = np.array(data)
-            print(np.shape(data))
-            np.save("data-np/"+str(v1)+"_"+str(v2), data)
-            del data
-        except:
-            pass
+combos = list(itertools.product(range(-total_num, total_num+1), repeat=2))
+for ii in tqdm(combos):
+    i = ii[0]
+    j = ii[1]
+    v1 = 1.5 * i / total_num
+    v2 = 1.5 * j / total_num
+    try:
+        data = np.array(csv_input("data/"+str(v1)+"_"+str(v2)+".csv"),dtype=float)
+        np.save("data-np/"+str(v1)+"_"+str(v2), data)
+        del data
+    except:
+        pass

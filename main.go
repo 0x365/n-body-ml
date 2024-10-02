@@ -95,7 +95,7 @@ func main() {
 	fmt.Println("Hi")
 	// fmt.Println(step())
 
-	total_num := 5
+	total_num := 50
 	no_circle := true
 
 	bar := progressbar.Default(2 * int64(total_num) * 2 * int64(total_num))
@@ -129,8 +129,8 @@ func main() {
 
 	sqrt3 := math.Sqrt(3.0)
 
-	for v1 = -total_num; v1 < total_num; v1++ {
-		for v2 = -total_num; v2 < total_num; v2++ {
+	for v1 = -total_num; v1 <= total_num; v1++ {
+		for v2 = total_num; v2 <= total_num; v2++ {
 
 			all_values = [][]string{}
 
@@ -157,14 +157,14 @@ func main() {
 				x = x0
 				v = v0
 
-				y_string = []string{"0"}
+				y_string = []string{}
 
 				for j = 0; j < len(x); j++ {
 					y_string = append(y_string, strconv.FormatFloat(x[j], 'f', -1, 64))
 				}
-				for j = 0; j < len(v); j++ {
-					y_string = append(y_string, strconv.FormatFloat(v[j], 'f', -1, 64))
-				}
+				// for j = 0; j < len(v); j++ {
+				//	y_string = append(y_string, strconv.FormatFloat(v[j], 'f', -1, 64))
+				// }
 				all_values = append(all_values, y_string)
 
 				for i = 1; i < 10000; i++ {
@@ -177,13 +177,13 @@ func main() {
 					v = arr_a(v, arr_m(get_acceleration(x), dt*d3))
 					x = arr_a(x, arr_m(v, c4*dt))
 
-					y_string = []string{strconv.Itoa(i)}
+					y_string = []string{}
 					for j = 0; j < len(x); j++ {
 						y_string = append(y_string, strconv.FormatFloat(x[j], 'f', -1, 64))
 					}
-					for j = 0; j < len(v); j++ {
-						y_string = append(y_string, strconv.FormatFloat(v[j], 'f', -1, 64))
-					}
+					// for j = 0; j < len(v); j++ {
+					//	y_string = append(y_string, strconv.FormatFloat(v[j], 'f', -1, 64))
+					//}
 					all_values = append(all_values, y_string)
 				}
 				save_to_csv(all_values, v_1, v_2)
