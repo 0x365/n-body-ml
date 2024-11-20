@@ -95,7 +95,8 @@ func main() {
 	fmt.Println("Hi")
 	// fmt.Println(step())
 
-	total_num := 100
+	total_num := 50
+	no_circle := true
 
 	bar := progressbar.Default(2 * int64(total_num) * 2 * int64(total_num))
 
@@ -133,52 +134,61 @@ func main() {
 
 			all_values = [][]string{}
 
-			v_1 = 2.0 * float64(v1) / float64(total_num)
-			v_2 = 2.0 * float64(v2) / float64(total_num)
+			v_1 = 1.5 * float64(v1) / float64(total_num)
+			v_2 = 1.5 * float64(v2) / float64(total_num)
 
-			// Line configuration
-			// x0 = []float64{-1.0, 0.0, 1.0, 0.0, 0.0, 0.0}
-			// v0 = []float64{v_1, v_2, v_1, v_2, -2.0 * v_1 / 1.0, -2.0 * v_2 / 1.0}
+			if math.Sqrt(math.Pow(v_1, 2)+math.Pow(v_2, 2)) <= 1.5 || no_circle {
 
-			// Triangle configuration
-			x0 = []float64{-sqrt3 / 2.0, -0.5, sqrt3 / 2.0, -0.5, 0.0, 1.0}
-			v0 = []float64{v_1 * 1.0 / 2.0, v_2 * (-sqrt3) / 2.0, v_1 / 2.0, v_2 * sqrt3 / 2.0, v_1 * (-1.0), 0.0}
+				// energy_string = []string{}
 
-			// N-bodies configuration
-			// x = r*cos(pi/2 + 2*pi*i/n)
-			// y = r*sin(pi/2 + 2*pi*i/n)
-			// Where r is radius of orbit, i is body number, and n is number of bodies
+				// Line configuration
+				// x0 = []float64{-1.0, 0.0, 1.0, 0.0, 0.0, 0.0}
+				// v0 = []float64{v_1, v_2, v_1, v_2, -2.0 * v_1 / 1.0, -2.0 * v_2 / 1.0}
 
-			x = x0
-			v = v0
+				// Triangle configuration
+				x0 = []float64{-sqrt3 / 2.0, -0.5, sqrt3 / 2.0, -0.5, 0.0, 1.0}
+				v0 = []float64{v_1 * 1.0 / 2.0, v_2 * (-sqrt3) / 2.0, v_1 / 2.0, v_2 * sqrt3 / 2.0, v_1 * (-1.0), 0.0}
 
-			y_string = []string{}
+				// N-bodies configuration
+				// x = r*cos(pi/2 + 2*pi*i/n)
+				// y = r*sin(pi/2 + 2*pi*i/n)
+				// Where r is radius of orbit, i is body number, and n is number of bodies
 
-			for j = 0; j < len(x); j++ {
-				y_string = append(y_string, strconv.FormatFloat(x[j], 'f', -1, 64))
-			}
-
-			all_values = append(all_values, y_string)
-
-			for i = 1; i < 10000; i++ {
-
-				x = arr_a(x, arr_m(v, c1*dt))
-				v = arr_a(v, arr_m(get_acceleration(x), dt*d1))
-				x = arr_a(x, arr_m(v, c2*dt))
-				v = arr_a(v, arr_m(get_acceleration(x), dt*d2))
-				x = arr_a(x, arr_m(v, c3*dt))
-				v = arr_a(v, arr_m(get_acceleration(x), dt*d3))
-				x = arr_a(x, arr_m(v, c4*dt))
+				x = x0
+				v = v0
 
 				y_string = []string{}
+
 				for j = 0; j < len(x); j++ {
 					y_string = append(y_string, strconv.FormatFloat(x[j], 'f', -1, 64))
 				}
-
+				// for j = 0; j < len(v); j++ {
+				//	y_string = append(y_string, strconv.FormatFloat(v[j], 'f', -1, 64))
+				// }
 				all_values = append(all_values, y_string)
+
+				for i = 1; i < 10000; i++ {
+
+					x = arr_a(x, arr_m(v, c1*dt))
+					v = arr_a(v, arr_m(get_acceleration(x), dt*d1))
+					x = arr_a(x, arr_m(v, c2*dt))
+					v = arr_a(v, arr_m(get_acceleration(x), dt*d2))
+					x = arr_a(x, arr_m(v, c3*dt))
+					v = arr_a(v, arr_m(get_acceleration(x), dt*d3))
+					x = arr_a(x, arr_m(v, c4*dt))
+
+					y_string = []string{}
+					for j = 0; j < len(x); j++ {
+						y_string = append(y_string, strconv.FormatFloat(x[j], 'f', -1, 64))
+					}
+					// for j = 0; j < len(v); j++ {
+					//	y_string = append(y_string, strconv.FormatFloat(v[j], 'f', -1, 64))
+					//}
+					all_values = append(all_values, y_string)
+				}
+				save_to_csv(all_values, v_1, v_2)
+				bar.Add(1)
 			}
-			save_to_csv(all_values, v_1, v_2)
-			bar.Add(1)
 		}
 	}
 }

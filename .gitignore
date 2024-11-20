@@ -3,3 +3,5 @@ data
 ml
 n-body-ml
 *.pth
+data-np
+datasets
