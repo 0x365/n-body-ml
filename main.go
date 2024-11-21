@@ -59,6 +59,67 @@ func get_acceleration(y []float64) (out []float64) {
 	return out
 }
 
+func get_acceleration4(y []float64) (out []float64) {
+
+	out = []float64{}
+
+	m1, m2, m3, m4 := 1.0, 1.0, 1.0, 1.0
+	G := 1.0
+
+	r1x, r1y := y[0], y[1]
+	r2x, r2y := y[2], y[3]
+	r3x, r3y := y[4], y[5]
+	r4x, r4y := y[6], y[7]
+
+	// r12 := math.Sqrt(math.Pow(r1x-r2x, 2) + math.Pow(r1y-r2y, 2))
+
+	r12 := math.Pow(math.Sqrt(math.Pow(r1x-r2x, 2)+math.Pow(r1y-r2y, 2)), 3)
+	r13 := math.Pow(math.Sqrt(math.Pow(r1x-r3x, 2)+math.Pow(r1y-r3y, 2)), 3)
+	r14 := math.Pow(math.Sqrt(math.Pow(r1x-r4x, 2)+math.Pow(r1y-r4y, 2)), 3)
+	r23 := math.Pow(math.Sqrt(math.Pow(r2x-r3x, 2)+math.Pow(r2y-r3y, 2)), 3)
+	r24 := math.Pow(math.Sqrt(math.Pow(r2x-r4x, 2)+math.Pow(r2y-r4y, 2)), 3)
+	r34 := math.Pow(math.Sqrt(math.Pow(r3x-r4x, 2)+math.Pow(r3y-r4y, 2)), 3)
+
+	if r12 == 0 {
+		r12 = 1.0
+	}
+	if r13 == 0 {
+		r13 = 1.0
+	}
+	if r14 == 0 {
+		r14 = 1.0
+	}
+	if r23 == 0 {
+		r23 = 1.0
+	}
+	if r24 == 0 {
+		r24 = 1.0
+	}
+	if r34 == 0 {
+		r34 = 1.0
+	}
+
+	f1x := -G*m2*(r1x-r2x)/r12 + -G*m3*(r1x-r3x)/r13 + -G*m4*(r1x-r4x)/r14
+	f1y := -G*m2*(r1y-r2y)/r12 + -G*m3*(r1y-r3y)/r13 + -G*m4*(r1y-r4y)/r14
+	f2x := -G*m1*(r2x-r1x)/r12 + -G*m3*(r2x-r3x)/r23 + -G*m4*(r2x-r4x)/r24
+	f2y := -G*m1*(r2y-r1y)/r12 + -G*m3*(r2y-r3y)/r23 + -G*m4*(r2y-r4y)/r24
+	f3x := -G*m1*(r3x-r1x)/r13 + -G*m2*(r3x-r2x)/r23 + -G*m4*(r3x-r4x)/r34
+	f3y := -G*m1*(r3y-r1y)/r13 + -G*m2*(r3y-r2y)/r23 + -G*m4*(r3y-r4y)/r34
+	f4x := -G*m1*(r4x-r1x)/r14 + -G*m2*(r4x-r2x)/r24 + -G*m3*(r3x-r4x)/r34
+	f4y := -G*m1*(r4y-r1y)/r14 + -G*m2*(r4y-r2y)/r24 + -G*m3*(r3y-r4y)/r34
+
+	out = append(out, f1x)
+	out = append(out, f1y)
+	out = append(out, f2x)
+	out = append(out, f2y)
+	out = append(out, f3x)
+	out = append(out, f3y)
+	out = append(out, f4x)
+	out = append(out, f4y)
+
+	return out
+}
+
 func arr_m(y []float64, multiplier float64) (z []float64) {
 	var i int
 	for i = 0; i < len(y); i++ {
@@ -97,7 +158,7 @@ func main() {
 
 	total_num := 200
 
-	bar := progressbar.Default(2 * int64(total_num) * 1 * int64(total_num))
+	bar := progressbar.Default(2 * int64(total_num) * 2 * int64(total_num))
 
 	var v_1 float64
 	var v_2 float64
@@ -129,20 +190,24 @@ func main() {
 	// sqrt3 := math.Sqrt(3.0)
 
 	for v1 = -total_num; v1 <= total_num; v1++ {
-		for v2 = -total_num; v2 <= 0; v2++ {
+		for v2 = -total_num; v2 <= total_num; v2++ {
 
 			all_values = [][]string{}
 
 			v_1 = 2.0 * float64(v1) / float64(total_num)
 			v_2 = 2.0 * float64(v2) / float64(total_num)
 
-			// Line configuration
-			x0 = []float64{-1.0, 0.0, 1.0, 0.0, 0.0, 0.0}
-			v0 = []float64{v_1, v_2, v_1, v_2, -2.0 * v_1 / 1.0, -2.0 * v_2 / 1.0}
+			// Line configuration - remember get_accerelation function
+			// x0 = []float64{-1.0, 0.0, 1.0, 0.0, 0.0, 0.0}
+			// v0 = []float64{v_1, v_2, v_1, v_2, -2.0 * v_1 / 1.0, -2.0 * v_2 / 1.0}
 
-			// Triangle configuration
+			// Triangle configuration - remember get_accerelation function
 			// x0 = []float64{-sqrt3 / 2.0, -0.5, sqrt3 / 2.0, -0.5, 0.0, 1.0}
 			// v0 = []float64{v_1 * 1.0 / 2.0, v_2 * (-sqrt3) / 2.0, v_1 / 2.0, v_2 * sqrt3 / 2.0, v_1 * (-1.0), 0.0}
+
+			// Square
+			x0 = []float64{-0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5}
+			v0 = []float64{-v_1, -v_2, -v_1, v_2, v_1, v_2, v_1, -v_2}
 
 			// N-bodies configuration
 			// x = r*cos(pi/2 + 2*pi*i/n)
@@ -160,14 +225,14 @@ func main() {
 
 			all_values = append(all_values, y_string)
 
-			for i = 1; i < 10000; i++ {
+			for i = 1; i < 3000; i++ {
 
 				x = arr_a(x, arr_m(v, c1*dt))
-				v = arr_a(v, arr_m(get_acceleration(x), dt*d1))
+				v = arr_a(v, arr_m(get_acceleration4(x), dt*d1))
 				x = arr_a(x, arr_m(v, c2*dt))
-				v = arr_a(v, arr_m(get_acceleration(x), dt*d2))
+				v = arr_a(v, arr_m(get_acceleration4(x), dt*d2))
 				x = arr_a(x, arr_m(v, c3*dt))
-				v = arr_a(v, arr_m(get_acceleration(x), dt*d3))
+				v = arr_a(v, arr_m(get_acceleration4(x), dt*d3))
 				x = arr_a(x, arr_m(v, c4*dt))
 
 				y_string = []string{}

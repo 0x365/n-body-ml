@@ -15,6 +15,9 @@ import itertools
 
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 
+max_val = 2.0
+
+
 def multi_sqrt(grid):
     for _ in range(2):
         grid = np.sqrt(grid)
@@ -47,7 +50,7 @@ grid = (grid -np.nanmin(grid)) / (np.nanmax(grid)-np.nanmin(grid))
 
 
 plt.figure(figsize=(21,20), layout="constrained")
-plt.imshow(grid, extent=[-2,2,2,-2], cmap="cividis_r", interpolation=None)
+plt.imshow(grid, extent=[-max_val,max_val,max_val,-max_val], cmap="cividis_r", interpolation=None)
 plt.xlabel("V1")
 plt.ylabel("V2")
 plt.colorbar()
@@ -56,13 +59,16 @@ plt.savefig("grid.png", dpi=500)
 plt.clf()
 
 plt.figure(figsize=(21,20), layout="constrained")
-plt.imshow(grid, extent=[-2,2,2,-2], cmap="tab20c", interpolation=None)
+plt.imshow(grid, extent=[-max_val,max_val,max_val,-max_val], cmap="tab20c", interpolation=None)
 plt.xlabel("V1")
 plt.ylabel("V2")
 plt.colorbar()
 plt.gca().invert_yaxis()
 plt.savefig("grid_colourful.png", dpi=500)
 plt.clf()
+
+
+
 
 
 # fig = plt.figure(figsize=(11,10), layout="constrained")
