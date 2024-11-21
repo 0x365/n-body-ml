@@ -95,9 +95,9 @@ func main() {
 	fmt.Println("Hi")
 	// fmt.Println(step())
 
-	total_num := 100
+	total_num := 200
 
-	bar := progressbar.Default(2 * int64(total_num) * 2 * int64(total_num))
+	bar := progressbar.Default(2 * int64(total_num) * 1 * int64(total_num))
 
 	var v_1 float64
 	var v_2 float64
@@ -126,10 +126,10 @@ func main() {
 	d2 := -1.7024
 	d3 := 1.3512
 
-	sqrt3 := math.Sqrt(3.0)
+	// sqrt3 := math.Sqrt(3.0)
 
 	for v1 = -total_num; v1 <= total_num; v1++ {
-		for v2 = -total_num; v2 <= total_num; v2++ {
+		for v2 = -total_num; v2 <= 0; v2++ {
 
 			all_values = [][]string{}
 
@@ -137,12 +137,12 @@ func main() {
 			v_2 = 2.0 * float64(v2) / float64(total_num)
 
 			// Line configuration
-			// x0 = []float64{-1.0, 0.0, 1.0, 0.0, 0.0, 0.0}
-			// v0 = []float64{v_1, v_2, v_1, v_2, -2.0 * v_1 / 1.0, -2.0 * v_2 / 1.0}
+			x0 = []float64{-1.0, 0.0, 1.0, 0.0, 0.0, 0.0}
+			v0 = []float64{v_1, v_2, v_1, v_2, -2.0 * v_1 / 1.0, -2.0 * v_2 / 1.0}
 
 			// Triangle configuration
-			x0 = []float64{-sqrt3 / 2.0, -0.5, sqrt3 / 2.0, -0.5, 0.0, 1.0}
-			v0 = []float64{v_1 * 1.0 / 2.0, v_2 * (-sqrt3) / 2.0, v_1 / 2.0, v_2 * sqrt3 / 2.0, v_1 * (-1.0), 0.0}
+			// x0 = []float64{-sqrt3 / 2.0, -0.5, sqrt3 / 2.0, -0.5, 0.0, 1.0}
+			// v0 = []float64{v_1 * 1.0 / 2.0, v_2 * (-sqrt3) / 2.0, v_1 / 2.0, v_2 * sqrt3 / 2.0, v_1 * (-1.0), 0.0}
 
 			// N-bodies configuration
 			// x = r*cos(pi/2 + 2*pi*i/n)

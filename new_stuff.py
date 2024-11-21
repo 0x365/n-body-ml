@@ -9,8 +9,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import itertools
 
+import os
 
-total_num = 100
+total_num = 200
 
 grid_abs_distance = np.zeros((total_num*2,total_num*2))
 grid_euc_distance = np.zeros((total_num*2,total_num*2))
@@ -52,33 +53,36 @@ c = 0
 for ii in tqdm(combos):
     i = ii[0]
     j = ii[1]
-    try:
-        mid = get_data(i,j)
-    except:
-        print(i,j, "Missing")
-        continue
-    try:
-        mid = get_data(i,j)
-        left = get_data(i,j+1)
-        right = get_data(i,j-1)
-        up = get_data(i+1,j)
-        down = get_data(i-1,j)
-        
-        grid_euc_distance[i+total_num,j+total_num] = get_euc_distance(mid, left, right, up, down)
-        grid_abs_distance[i+total_num,j+total_num] = get_abs_distance(mid, left, right, up, down)
-        grid_mse[i+total_num,j+total_num] = get_mse(mid, left, right, up, down)
-        c += 1
-    except:
-        pass
-    if c % int(len(combos)/10) == 0 and c != 0:
-        plt.figure(figsize=(11,10), layout="constrained")
-        plt.imshow(np.log10(grid_euc_distance))
-        plt.colorbar()
-        plt.gca().invert_yaxis()
-        plt.savefig("grid.png")
-        plt.clf()
+    if j <= 0:
+        if not os.path.exists("data-np/"+str(i)+"_"+str(j)+".npy"):
+            continue
+        try:
+            mid = get_data(i,j)
+            left = get_data(i,j+1)
+            right = get_data(i,j-1)
+            up = get_data(i+1,j)
+            down = get_data(i-1,j)
+            
+            grid_euc_distance[i+total_num,j+total_num] = get_euc_distance(mid, left, right, up, down)
+            grid_abs_distance[i+total_num,j+total_num] = get_abs_distance(mid, left, right, up, down)
+            grid_mse[i+total_num,j+total_num] = get_mse(mid, left, right, up, down)
+            c += 1
+        except:
+            pass
+        if c % int(len(combos)/10) == 0 and c != 0:
+            plt.figure(figsize=(11,10), layout="constrained")
+            plt.imshow(np.log10(grid_euc_distance))
+            plt.colorbar()
+            plt.gca().invert_yaxis()
+            plt.savefig("grid.png")
+            plt.clf()
 
 print(c, "completed")
+
+grid_euc_distance[:,total_num:] = np.rot90(grid_euc_distance[:,:total_num], k=2)
+grid_abs_distance[:,total_num:] = np.rot90(grid_abs_distance[:,:total_num], k=2)
+grid_mse[:,total_num:] = np.rot90(grid_mse[:,:total_num], k=2)
+
 np.save("datasets/grid_euc_distance", grid_euc_distance)
 np.save("datasets/grid_abs_distance", grid_abs_distance)
 np.save("datasets/grid_mse", grid_mse)
