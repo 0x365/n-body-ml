@@ -3,8 +3,10 @@ data
 ml
 n-body-ml
 *.pth
-data-np-2ms
-data-np-4ms
+data-np-1ms-line
+data-np-2ms-line
+data-np-2ms-triangle
+data-np-4ms-triangle
 data-np
 
 /*.png

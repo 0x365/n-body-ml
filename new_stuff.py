@@ -53,7 +53,7 @@ c = 0
 for ii in tqdm(combos):
     i = ii[0]
     j = ii[1]
-    if j <= 0:
+    if j <= 0 and i <= 0:
         if not os.path.exists("data-np/"+str(i)+"_"+str(j)+".npy"):
             continue
         try:
@@ -79,15 +79,21 @@ for ii in tqdm(combos):
 
 print(c, "completed")
 
-grid_euc_distance[:,total_num:] = np.rot90(grid_euc_distance[:,:total_num], k=2)
-grid_abs_distance[:,total_num:] = np.rot90(grid_abs_distance[:,:total_num], k=2)
-grid_mse[:,total_num:] = np.rot90(grid_mse[:,:total_num], k=2)
+grid_euc_distance[:,total_num:] = np.flip(grid_euc_distance[:,:total_num], axis=1)
+grid_euc_distance[total_num:,:] = np.flip(grid_euc_distance[:total_num,:], axis=0)
+
+
+# grid_euc_distance[:,total_num:] = np.rot90(grid_euc_distance[:,:total_num], k=2)
+# grid_abs_distance[:,total_num:] = np.rot90(grid_abs_distance[:,:total_num], k=2)
+# grid_mse[:,total_num:] = np.rot90(grid_mse[:,:total_num], k=2)
 
 np.save("datasets/grid_euc_distance", grid_euc_distance)
 np.save("datasets/grid_abs_distance", grid_abs_distance)
 np.save("datasets/grid_mse", grid_mse)
 
 print(grid_euc_distance)
+
+grid_euc_distance[grid_euc_distance == 0] = np.nan
 
 plt.figure(figsize=(11,10), layout="constrained")
 plt.imshow(np.log10(grid_euc_distance))

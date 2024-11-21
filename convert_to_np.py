@@ -22,15 +22,15 @@ def csv_input(file_name):
 
 total_num = 200
 
-combos = list(itertools.product([0, *range(-total_num, total_num+1)], repeat=2))
+combos = list(itertools.product([0, *range(-total_num, 0)], repeat=2))
 for ii in tqdm(combos):
     i = ii[0]
     j = ii[1]
-    if j <= 0:
+    if i <= 0 and j <= 0:
         if not os.path.exists("data-np/"+str(i)+"_"+str(j)+".npy"):
             try:
-                v1 = 2.0 * i / total_num
-                v2 = 2.0 * j / total_num
+                v1 = 1.0 * i / total_num
+                v2 = 1.0 * j / total_num
                 if round(v1) == v1:
                     v1 = round(v1)
                 if round(v2) == v2:
