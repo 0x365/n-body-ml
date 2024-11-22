@@ -14,7 +14,7 @@ import os
 total_num = 200
 
 grid_abs_distance = np.zeros((total_num*2,total_num*2))
-grid_euc_distance = np.zeros((total_num*2,total_num*2))
+grid_euc_distance = np.zeros((total_num*2,total_num*2, len(range(50,3000,50))))
 grid_mse = np.zeros((total_num*2,total_num*2))
 
 def get_data(i,j):
@@ -48,6 +48,8 @@ def get_mse(mid, left, right, up, down):
     return diff_mean
 
 
+
+
 combos = list(itertools.product([0, *range(-total_num, total_num+1)], repeat=2))
 c = 0
 for ii in tqdm(combos):
@@ -62,8 +64,10 @@ for ii in tqdm(combos):
         right = get_data(i,j-1)
         up = get_data(i+1,j)
         down = get_data(i-1,j)
-        
-        grid_euc_distance[i+total_num,j+total_num] = get_euc_distance(mid, left, right, up, down)
+
+        for jj, xx in enumerate(range(50,3000,50)):
+            
+            grid_euc_distance[i+total_num,j+total_num,jj] = get_euc_distance(mid[:,:xx], left[:,:xx], right[:,:xx], up[:,:xx], down[:,:xx])
         grid_abs_distance[i+total_num,j+total_num] = get_abs_distance(mid, left, right, up, down)
         grid_mse[i+total_num,j+total_num] = get_mse(mid, left, right, up, down)
         c += 1
@@ -71,7 +75,7 @@ for ii in tqdm(combos):
         pass
     if c % int(len(combos)/10) == 0 and c != 0:
         plt.figure(figsize=(11,10), layout="constrained")
-        grid_plot = np.log10(grid_euc_distance)
+        grid_plot = np.log10(grid_euc_distance[:,:,-1])
         grid_plot = np.log10(grid_plot+2)
         plt.imshow(grid_plot, cmap="cividis_r")
         plt.colorbar()
@@ -98,7 +102,7 @@ print(grid_euc_distance)
 grid_euc_distance[grid_euc_distance == 0] = np.nan
 
 plt.figure(figsize=(11,10), layout="constrained")
-grid_plot = np.log10(grid_euc_distance)
+grid_plot = np.log10(grid_euc_distance[:,:,-1])
 grid_plot = np.log10(grid_plot+2)
 plt.imshow(grid_plot, cmap="cividis_r")
 plt.colorbar()

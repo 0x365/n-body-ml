@@ -42,12 +42,22 @@ ranks_normalized = ranks / (len(grid.flatten()) + 1)
 grid = np.reshape(ranks_normalized, np.shape(grid))
 # grid = norm.ppf(grid)
 
-
-
-
-
 grid = (grid -np.nanmin(grid)) / (np.nanmax(grid)-np.nanmin(grid))
 
+
+# grid_sign = grid.copy()
+# grid_sign = grid_sign - 0.5
+# grid = np.abs(grid-0.5)
+
+# grid = np.log10(grid+0.01)
+# grid[grid_sign < 0] = grid[grid_sign < 0]*-1
+
+
+# grid = (grid -np.nanmin(grid)) / (np.nanmax(grid)-np.nanmin(grid))
+
+# grid[grid > 0.8] = 0.8
+# grid[grid > 0.5] = grid[grid>0.5]*-1
+# grid = np.log10(grid+0.01)
 
 plt.figure(figsize=(21,20), layout="constrained")
 plt.imshow(grid, extent=[-max_val,max_val,max_val,-max_val], cmap="cividis_r", interpolation=None)
